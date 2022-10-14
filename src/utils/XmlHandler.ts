@@ -1,18 +1,9 @@
 import xml2js from 'xml2js';
 import { parseBooleans, parseNumbers } from 'xml2js/lib/processors';
+import {XMLParser} from "fast-xml-parser";
 
 export class XmlHandler {
-  private static _parser = new xml2js.Parser({
-    attrkey: 'attr',
-    charkey: 'value',
-    explicitArray: false,
-    attrValueProcessors: [
-      parseNumbers, parseBooleans
-    ],
-    valueProcessors: [
-      parseNumbers, parseBooleans
-    ]
-  });
+  private static _parser = new XMLParser();
   private static _builder = new xml2js.Builder({
     headless: true,
     renderOpts: {
@@ -21,7 +12,7 @@ export class XmlHandler {
   });
 
   public static async parser<T>(data: string): Promise<T> {
-    return (await this._parser.parseStringPromise(data)) as T;
+    return (await this._parser.parse(data)) as T;
   }
 
   public static build(data: any): string {
